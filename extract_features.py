@@ -98,7 +98,7 @@ def main():
                 ingredient_counts[ ingredient ] = 1
     
     top_k = 10 # top max_verbs_len verbs
-    top_k_ingred = sorted(ingredient_counts.iteritems(), key=operator.itemgetter(1), reverse=True)[:5]
+    top_k_ingred = sorted(ingredient_counts.iteritems(), key=operator.itemgetter(1), reverse=True)[:top_k]
     top_k_ingred = [k[0] for k in top_k_ingred]
 
     ############################################################################
@@ -218,5 +218,10 @@ def main():
     print features.T.shape
     print features.T
 
+    np.savetxt("./data/cheesecake/features/features.csv",
+               features.T,
+               fmt='%s',
+               delimiter=',')
+    
 if __name__ == '__main__':
     main()
