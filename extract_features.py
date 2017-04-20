@@ -14,6 +14,7 @@ def count_recipe_verbs(recipe_steps):
         instruction = ' '.join(step[1:])
         words = nltk.pos_tag(nltk.word_tokenize(instruction))
         for (word, pos) in words:
+            word = word.lower()
             if pos in upenn_tagset:
                 verb = WordNetLemmatizer().lemmatize(word,'v')
                 if verb in verbs:
@@ -53,11 +54,14 @@ def add_to_features(features, add_on):
         return add_on         
 
 def lexical_diversity(words):
-    return float( len(set(words)) ) / len(words)
+    if len(words) == 0:
+        return 0
+    else:
+        return float( len(set(words)) ) / len(words)
         
 def main():
     ##########################################################################
-    recipe_steps = load_csv('./data/cheesecake/steps.csv') 
+    recipe_steps = load_csv('./data/cookies/steps.csv') 
 
     # Preprocessing: get verb count 
     verbs = count_recipe_verbs(recipe_steps)
@@ -67,16 +71,18 @@ def main():
     top_k = 10 # top k verbs 
     
     top_k_verb = get_k_verbs(verbs=verbs, k=top_k, l=minimum_verb_len)
+    print top_k_verb
     ###########################################################################
     # Get most used ingredients
     ingredient_counts = {}
-    recipe_ingredients = load_csv("./data/cheesecake/ingredients.csv")
+    recipe_ingredients = load_csv("./data/cookies/ingredients.csv")
     stemmer = nltk.PorterStemmer()
     for ingredients in recipe_ingredients:
         ingred_id = ingredients[0]
         ingredients = ingredients[1:]
         for ingredient in ingredients:
-            if ingredient == 'Add all ingredients to list': # Special case: non-ingredients are within scraped data
+            ingredient = ingredient.lower()
+            if ingredient == 'add all ingredients to list': # Special case: non-ingredients are within scraped data
                 continue
             ingredient = ingredient.split(',')[0]
             ingredient = ingredient.translate(None, '()')
@@ -100,11 +106,11 @@ def main():
     top_k = 10 # top max_verbs_len verbs
     top_k_ingred = sorted(ingredient_counts.iteritems(), key=operator.itemgetter(1), reverse=True)[:top_k]
     top_k_ingred = [k[0] for k in top_k_ingred]
-
+    print top_k_ingred
     ############################################################################
-    recipe_ingredients = load_csv("./data/cheesecake/ingredients.csv")
-    recipe_steps = load_csv('./data/cheesecake/steps.csv')
-    basic_infos = load_csv('./data/cheesecake/basic_info.csv')
+    recipe_ingredients = load_csv("./data/cookies/ingredients.csv")
+    recipe_steps = load_csv('./data/cookies/steps.csv')
+    basic_infos = load_csv('./data/cookies/basic_info.csv')
     basic_infos = np.array(basic_infos)
 #    top_k_ingred = ['white sugar', 'cream cheese', 'vanilla extract', 'eggs', 'butter']
 #    top_k_verb = [u'blend', u'serve', u'remain', u'combine', u'Remove', u'remove',
@@ -192,7 +198,10 @@ def main():
 #        else:
 #            (hour, remainder_string) = time.split('H')
 #            minute = remainder_string.split('M')[0]
-        if 'Day' in time:
+        if 'Days' in time:
+            (day, remainder_string) = time.split('Days')
+            print "Day: {}, remainder: {}".format(day, remainder_string)
+        elif 'Day' in time:
             (day, remainder_string) = time.split('Day')
         if 'H' in time:
             (hour, remainder_string) = remainder_string.split('H')
@@ -218,7 +227,7 @@ def main():
     print features.T.shape
     print features.T
 
-    np.savetxt("./data/cheesecake/features/features.csv",
+    np.savetxt("./data/cookies/features/features.csv",
                features.T,
                fmt='%s',
                delimiter=',')
