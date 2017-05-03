@@ -8,6 +8,7 @@ import constants.metrics
 
 upenn_tagset = ['VB', 'VBD', 'VBG', 'VBN', 'VBP', 'VBZ']
 
+# Return a dictionary of word: word count 
 def count_recipe_verbs(recipe_steps):
     verbs = {}
     for step in recipe_steps:
@@ -73,7 +74,7 @@ def main():
     top_k_verb = get_k_verbs(verbs=verbs, k=top_k, l=minimum_verb_len)
     print top_k_verb
     ###########################################################################
-    # Get most used ingredients
+    # Get k most used ingredients
     ingredient_counts = {}
     recipe_ingredients = load_csv("./data/cookies/ingredients.csv")
     stemmer = nltk.PorterStemmer()
@@ -108,13 +109,12 @@ def main():
     top_k_ingred = [k[0] for k in top_k_ingred]
     print top_k_ingred
     ############################################################################
+    # Feature Extraction
     recipe_ingredients = load_csv("./data/cookies/ingredients.csv")
     recipe_steps = load_csv('./data/cookies/steps.csv')
     basic_infos = load_csv('./data/cookies/basic_info.csv')
     basic_infos = np.array(basic_infos)
-#    top_k_ingred = ['white sugar', 'cream cheese', 'vanilla extract', 'eggs', 'butter']
-#    top_k_verb = [u'blend', u'serve', u'remain', u'combine', u'Remove', u'remove',
-#                  u'refrigerate', u'chill', u'allow', u'Place']
+
     features = np.array([[]])
     # Ingredients
     # Length of ingredients
@@ -191,13 +191,7 @@ def main():
         hour = 0
         minute = 0
         remainder_string = time
-#        if 'Day' in time:
-#            (day, remainder_string) = time.split('Day')
-#            (hour, remainder_string) = remainder_string.split('H')
-#            minute = remainder_string.split('M')[0]
-#        else:
-#            (hour, remainder_string) = time.split('H')
-#            minute = remainder_string.split('M')[0]
+        # Convert different time metrics to minutes
         if 'Days' in time:
             (day, remainder_string) = time.split('Days')
             print "Day: {}, remainder: {}".format(day, remainder_string)
