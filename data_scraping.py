@@ -12,10 +12,8 @@ import csv
 # ********** Methods **************
 # collect all recipes urls
 def collect_recipes_urls():
-    #url = "http://allrecipes.com/recipes/840/desserts/cookies/chocolate-cookies/?page="
-    url = "http://allrecipes.com/recipes/1537/bread/yeast-bread/bagels/?page="
-    # url = "http://allrecipes.com/recipes/362/desserts/cookies/?page="
-    # url = "http://allrecipes.com/recipes/810/desserts/pies/custard-and-cream-pies/lemon-pie/?page="
+    url = "http://allrecipes.com/recipes/840/desserts/cookies/chocolate-cookies/?page="
+
     page_cnt = 1
     end_of_page = False
     urls_lists = []
@@ -297,36 +295,10 @@ def scrape_recipe(br, url):
     for x in np.arange(len(steps) - 1):
         step_list.append(str(steps[x].text.encode('ascii', 'ignore')))
 
-    # update mongoDB with ingredients entry
-    for ingr in ingredients_list:
-        temp = {'idnumber': recipe_id,'ingredient': ingr.encode('ascii', 'ignore')}
-        if not temp['ingredient'] == '':
-            recipe_ingredients.append(temp['ingredient'])
-            #print temp
-
-
-    # update mongoDB with step entry
-    for stp in step_list:
-        temp = {'idnumber': recipe_id, 'step': stp.encode('ascii', 'ignore')}
-        if not temp['step'] == '':
-            recipe_steps.append(temp['step'])
-            #print temp
 
     all_info.append(recipe_basic_info)
     all_info.append(recipe_ingredients)
     all_info.append(recipe_steps)
-
-    # Update mongoDB with recipe entry
-    temp = {'idnumber': recipe_id,
-            'recipe_title': title.encode('ascii', 'ignore'),
-            'star_rating': star_rating,
-            'made_it_count': made_it_count,
-            'review_count': review_count,
-            'cal_count': cal_count,
-            'prep_time': prep_time,
-            'cook_time': cook_time,
-            'total_time': total_time}
-    #print temp
 
     return all_info
 
@@ -335,7 +307,7 @@ def scrape_recipe(br, url):
 chop = webdriver.ChromeOptions()
 chop.add_extension('AdBlock_v3.9.1.crx')
 driver = webdriver.Chrome(chrome_options=chop)
-#collect_recipes_urls()
+collect_recipes_urls()
 
 urls = load_urls()
 
@@ -364,7 +336,7 @@ for i in range(0, len(urls)):
         to_csv("steps.csv", all_recipes_steps)
 
 
-"""
+
 load_csv_basic_info = load_csv("basic_info.csv")
 load_csv_ingredients = load_csv("ingredients.csv")
 load_csv_steps = load_csv("steps.csv")
@@ -372,7 +344,7 @@ load_csv_steps = load_csv("steps.csv")
 print load_csv_basic_info[1][1]
 print load_csv_ingredients[1][1]
 print load_csv_steps[1][1]
-"""
-#driver.close()
+
+driver.close()
 
 

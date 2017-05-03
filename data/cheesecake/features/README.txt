@@ -1,14 +1,24 @@
 Attribute Information:
 
 This problem has the following inputs:
-1. Recipe ID
-2. Number of ingredients
-3-12. Existence of top k used recipe ingredients
-13. Number of recipe instructions
-14. Lexical diversity of recipe instructions 
-15-24. Existence of top k used verbs in recipe instructions 
-25. Calorie
-26. Total preparation + cook time
+
+tree
+1. Number of ingredients
+	2-11. Existence of top k used recipe ingredients
+12. Number of recipe instructions
+13. Lexical diversity of recipe instructions 
+	14-23. Existence of top k used verbs in recipe instructions 
+24. Calorie
+25. Total preparation + cook time
+
+tree
+1. Number of ingredients
+	2-11. Existence of top k used recipe ingredients
+12. Number of recipe instructions
+13. Lexical diversity of recipe instructions 
+	14-23. Existence of top k used verbs in recipe instructions 
+24. Calorie
+25. Total preparation + cook time
 
 The only output is:
 27. Star rating
